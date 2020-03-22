@@ -1,0 +1,1 @@
+iverilog -g2012 -o qqq tb.sv && vvp qqq && cls
