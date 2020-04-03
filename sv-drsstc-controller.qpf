@@ -18,13 +18,13 @@
 #
 # Quartus Prime
 # Version 18.1.0 Build 625 09/12/2018 SJ Lite Edition
-# Date created = 16:04:10  March 21, 2020
+# Date created = 17:01:53  April 03, 2020
 #
 # -------------------------------------------------------------------------- #
 
 QUARTUS_VERSION = "18.1"
-DATE = "16:04:10  March 21, 2020"
+DATE = "17:01:53  April 03, 2020"
 
 # Revisions
 
-PROJECT_REVISION = "sverilog-fsm"
+PROJECT_REVISION = "sv-drsstc-controller"
