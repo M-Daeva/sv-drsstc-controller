@@ -5,15 +5,11 @@ module test_entry;
 
 reg clk_tb, uart_data_tb, uart_clk_tb;
 wire is_data_ready_tb;
-`wire(STATE_2)	state_tb;
 `wire(STORAGE_MAX) storage_tb;
-`wire(FRAME_CNT_MAX_1) frame_cnt_tb;
 
 entry entry_inst(
 				.clk(clk_tb),
 				.uart_data(uart_data_tb),
-				.frame_cnt(frame_cnt_tb),
-				.state(state_tb),
 				.storage(storage_tb),
 				.is_data_ready(is_data_ready_tb)
 			);
@@ -50,8 +46,6 @@ initial $monitor(
 		clk_tb,,
 		uart_clk_tb,,
 		uart_data_tb,,
-		state_tb,,
-		frame_cnt_tb,,
 		storage_tb,,
 		is_data_ready_tb
 	);

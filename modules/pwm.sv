@@ -1,9 +1,9 @@
 `include "modules/defines.sv"
 
 module pwm #(parameter
-						 clk_mhz = 50,
-						 freq_khz = 400,
-						 duty = 40
+						 CLK_MHZ = 50,
+						 FREQ_KHZ = 400,
+						 DUTY = 40
 						)
 			 (
 				 input wire clk,
@@ -11,8 +11,8 @@ module pwm #(parameter
 				 output wire out
 			 );
 
-localparam cnt_max = `div(1000 * clk_mhz, freq_khz),
-					 cnt_duty = `div(duty * cnt_max, 100);
+localparam cnt_max = `div(1000 * CLK_MHZ, FREQ_KHZ),
+					 cnt_duty = `div(DUTY * cnt_max, 100);
 
 `reg(cnt_max) cnt = cnt_max - 1;
 
