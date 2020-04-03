@@ -7,7 +7,7 @@ reg clk_tb, uart_data_tb, uart_clk_tb;
 wire is_data_ready_tb;
 `wire(STATE_2)	state_tb;
 `wire(STORAGE_MAX) storage_tb;
-`wire(FRAME_CNT_MAX_1 * FRAME) frame_cnt_tb;
+`wire(FRAME_CNT_MAX_1) frame_cnt_tb;
 
 entry entry_inst(
 				.clk(clk_tb),
@@ -18,8 +18,8 @@ entry entry_inst(
 				.is_data_ready(is_data_ready_tb)
 			);
 
-int test_data = 'b0_0010_1100_10_0100_1100, // 42
-		packet_size = 19;
+localparam test_data = 19'b0_0010_1100_10_0100_1100, // 42
+					 packet_size = $bits(test_data);
 
 // clk
 always #CLK_FRAME_TB clk_tb = ~clk_tb;
