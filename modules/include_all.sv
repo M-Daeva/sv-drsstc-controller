@@ -2,3 +2,4 @@
 `include "modules/pwm.sv"
 `include "modules/sync.sv"
 `include "modules/uart.sv"
+`include "modules/gen.sv"

@@ -14,7 +14,7 @@ localparam 	GEN_CLK_FREQ = 100_000_000,
 						FRAME_TB = `div(TB_CLK_FREQ, FRAME_FREQ),
 						CLK_FRAME_TB = `div(TB_CLK_FREQ, (2 * GEN_CLK_FREQ)),
 
-						STORAGE_MAX = 255,
+						CONF_PAR_MAX = 255,
 						FRAME_CNT_MAX_1 = 3 * FRAME,
 						FRAME_CNT_MAX_2 = 2 * FRAME,
 						DATA_BIT_CNT_MAX = 7;
