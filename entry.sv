@@ -6,7 +6,9 @@
 module entry (
 				 input wire clk,
 				 input wire uart_data,
-				 output `wire_2d(sh_reg, CONF_PAR_MAX, CONF_PAR_4)
+				 output `wire_2d(sh_reg, CONF_PAR_MAX, CONF_PAR_4),
+				 output wire[7:0] storage,
+				 output wire[1:0] state
 			 );
 /*
 gen gen_ins(
@@ -24,7 +26,9 @@ uart #(
 		 ) uart_ins(
 			 .clk(clk),
 			 .uart_data(uart_data),
-			 .sh_reg(sh_reg)
+			 .sh_reg(sh_reg),
+			 .storage(storage),
+			 .state(state)
 		 );
 
 
