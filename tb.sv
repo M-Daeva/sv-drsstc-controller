@@ -7,8 +7,9 @@ reg clk_tb, uart_data_tb, uart_clk_tb;
 wire is_data_ready_tb, out_tb;
 `wire_2d(sh_reg_tb, CONF_PAR_MAX, CONF_PAR_4);
 `wire(CONF_PAR_MAX) sh_0, sh_1, sh_2, sh_3, sh_4;
-wire[7:0] storage_tb;
-wire[1:0] state_tb;
+//wire[7:0] storage_tb;
+//wire[1:0] state_tb;
+wire out_pred_tb;
 
 assign sh_0 = sh_reg_tb[0],
 			 sh_1 = sh_reg_tb[1],
@@ -21,8 +22,10 @@ entry entry_inst(
 				.clk(clk_tb),
 				.uart_data(uart_data_tb),
 				.sh_reg(sh_reg_tb),
-				.storage(storage_tb),
-				.state(state_tb)
+				//.storage(storage_tb),
+				//.state(state_tb)
+				.out(out_tb),
+				.out_pred(out_pred_tb)
 			);
 
 localparam //test_data = 49'b0_00101100_10_01001100_10_00101100_10_01001100_10_00101100, // 42424
@@ -64,8 +67,9 @@ initial $monitor(
 		sh_3,,
 		sh_4,,
 		out_tb,,
-		storage_tb,,
-		state_tb
+		//storage_tb,,
+		//state_tb
+		out_pred_tb,,
 	);
 
 endmodule

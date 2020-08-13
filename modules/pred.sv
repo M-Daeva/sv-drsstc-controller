@@ -1,7 +1,7 @@
 `include "modules/defines.sv"
 
 module pred #(parameter
-							PRED_PARAMETER = 10
+							PRED_PARAMETER = 50
 						 )
 			 (
 				 input wire clk,
@@ -15,10 +15,10 @@ localparam CNT_MAX = 255;
 `reg(CNT_MAX) cnt = PRED_PARAMETER;
 
 always @(posedge clk) begin
-	if (sgn && ~sgn_pre) begin
+	if (sgn ^ sgn_pre) begin
 		if (cnt) cnt <= cnt - 1;
 		else begin
-			cnt <= PRED_PARAMETER;
+			cnt <= PRED_PARAMETER - 1;
 			sgn_pre <= sgn;
 		end
 	end

@@ -23,19 +23,19 @@ module uart #(parameter
 			 (
 				 input wire clk,
 				 input wire uart_data,
-				 output `reg_2d(sh_reg, CONF_PAR_MAX, CONF_PAR_4),
-				 output `reg(CONF_PAR_MAX) storage = 0,
-				 output `reg(STATE_2) state = STATE_0
+				 output `reg_2d(sh_reg, CONF_PAR_MAX, CONF_PAR_4)
+				 //output `reg(CONF_PAR_MAX) storage = 0,
+				 //output `reg(STATE_2) state = STATE_0
 			 );
 
 // initializing sh_reg with zeroes
 initial for(int i = 0; i <= CONF_PAR_4; i++) sh_reg[i] = 0;
 
 `reg(FRAME_CNT_MAX_1) frame_cnt = FRAME_CNT_MAX_1;
-//`reg(STATE_2) state = STATE_0;
+`reg(STATE_2) state = STATE_0;
 `reg(DATA_BIT_CNT_MAX) data_bit_cnt = DATA_BIT_CNT_MAX;
 `reg(CONF_PAR_4) conf_par_cnt = CONF_PAR_4;
-//`reg(CONF_PAR_MAX) storage = 0;
+`reg(CONF_PAR_MAX) storage = 0;
 
 wire data_edge_n;
 
@@ -50,7 +50,6 @@ always @(posedge clk) begin
 	// state values
 	case(state)
 		STATE_1: frame_cnt <= frame_cnt ? frame_cnt - 1 : FRAME_CNT_MAX_2;
-
 		STATE_2: if (frame_cnt) frame_cnt <= frame_cnt - 1;
 			else begin
 				frame_cnt <= FRAME_CNT_MAX_2;
