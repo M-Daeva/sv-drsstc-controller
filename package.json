@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "build": "gtkwave out.vcd",
+    "sim": "sim.bat"
+  }
+}

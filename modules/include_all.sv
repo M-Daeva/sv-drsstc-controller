@@ -4,3 +4,4 @@
 `include "modules/uart.sv"
 `include "modules/gen.sv"
 `include "modules/pred.sv"
+`include "modules/selector.sv"

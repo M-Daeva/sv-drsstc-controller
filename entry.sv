@@ -25,6 +25,7 @@ gen gen_ins(
 pred pred_ins(
 			 .clk(clk),
 			 .sgn(out),
+			 .shift(8'd62),
 			 .sgn_pre(out_pred)
 		 );
 

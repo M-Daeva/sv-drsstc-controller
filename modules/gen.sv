@@ -2,7 +2,7 @@
 
 module gen #(parameter
 						 CLK_MHZ = 100,
-						 FREQ_KHZ_MIN = 100,
+						 FREQ_KHZ_MIN = 100,	// actual range from 200 to 400
 						 FREQ_KHZ_MAX = 400,
 						 GEN_PARAMETER = 255
 						)
