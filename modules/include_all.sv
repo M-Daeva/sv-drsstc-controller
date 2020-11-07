@@ -1,7 +1,0 @@
-`include "modules/defines.sv"
-`include "modules/pwm.sv"
-`include "modules/sync.sv"
-`include "modules/uart.sv"
-`include "modules/gen.sv"
-`include "modules/pred.sv"
-`include "modules/selector.sv"

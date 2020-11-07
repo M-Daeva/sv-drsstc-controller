@@ -1,4 +1,8 @@
-`include "modules/include_all.sv"
+`include "./dist/uart.sv"
+`include "./dist/gen.sv"
+`include "./dist/pred.sv"
+`include "./dist/selector.sv"
+`include "./dist/interrupter.sv"
 
 /*
 real uart frequency is 9600 Hz

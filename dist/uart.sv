@@ -1,18 +1,34 @@
-`include "modules/defines.sv"
-`include "modules/edge_det.sv"
+`include "./modules/defines.sv"
+module edge_det_160478825394904598180987259881
+			 (
+				 input wire clk,
+				 input wire sgn,
+				 output wire out_p,
+				 output wire out_n,
+				 output wire out
+			 );
 
-/*
-0 - ref_gen
-1 - phase_shift
-2 - ocd_lvl
-3 - inter_freq
-4 - inter_duty
-*/
+reg sgn_pre = 0;
+
+assign out_p = sgn && ~sgn_pre,
+			 out_n = ~sgn && sgn_pre,
+			 out = sgn ^ sgn_pre;
+
+always @(posedge clk)
+	if (out) sgn_pre <= sgn;
+
+endmodule
 
 
+	/*
+	0 - ref_gen
+	1 - phase_shift
+	2 - ocd_lvl
+	3 - inter_freq
+	4 - inter_duty
+	*/
 
-typedef enum { STATE_0, STATE_1, STATE_2 } State;
-typedef enum { CONF_PAR_0, CONF_PAR_1, CONF_PAR_2, CONF_PAR_3, CONF_PAR_4 } Conf_par;
+	typedef enum { CONF_PAR_[5] } Conf_par;
 
 module uart #(parameter
 							CONF_PAR_MAX = 255,
@@ -31,20 +47,20 @@ module uart #(parameter
 // initializing sh_reg with zeroes
 initial for(int i = 0; i <= CONF_PAR_4; i++) sh_reg[i] = 0;
 
+typedef enum { STATE_[3] } State;
+
 `reg(FRAME_CNT_MAX_1) frame_cnt = FRAME_CNT_MAX_1;
 `reg(STATE_2) state = STATE_0;
 `reg(DATA_BIT_CNT_MAX) data_bit_cnt = DATA_BIT_CNT_MAX;
 `reg(CONF_PAR_4) conf_par_cnt = CONF_PAR_4;
 `reg(CONF_PAR_MAX) storage = 0;
 
-wire data_edge_n;
-
 // state transition conditions
 wire cond_1 = data_edge_n,	// transmission start
 		 cond_2 = !frame_cnt,	// first data bit
 		 cond_0 = !data_bit_cnt;	// last data bit
 
-edge_det edge_det_ins(.clk(clk), .sgn(uart_data), .out_n(data_edge_n));
+edge_det_160478825394904598180987259881 uart_n(.clk(clk), .sgn(uart_data), .out_n(data_edge_n));
 
 always @(posedge clk) begin
 	// state values

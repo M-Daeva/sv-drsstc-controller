@@ -1,6 +1,8 @@
 {
+  "type": "module",
   "scripts": {
-    "build": "gtkwave out.vcd",
-    "sim": "sim.bat"
+    "gtk": "gtkwave out.vcd",
+    "lint": "python ./utils/main.py",
+    "sim": "iverilog -g2012 -o qqq tb.sv && vvp qqq && cls"
   }
 }

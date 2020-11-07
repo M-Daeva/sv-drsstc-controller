@@ -1,4 +1,4 @@
-`include "modules/defines.sv"
+`include "./modules/defines.sv"
 
 module pred #(parameter
 							PRED_PARAMETER = 255
@@ -10,8 +10,7 @@ module pred #(parameter
 				 output reg sgn_pre = 0
 			 );
 
-
-`reg(PRED_PARAMETER) cnt;	// rewrite inital value as shift
+`reg(PRED_PARAMETER) cnt;
 initial cnt = shift;
 
 always @(posedge clk) begin

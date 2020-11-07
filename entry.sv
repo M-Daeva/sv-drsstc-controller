@@ -10,7 +10,8 @@ module entry (
 				 //output wire[7:0] storage,
 				 //output wire[1:0] state
 				 output wire out,
-				 output wire out_pred
+				 output wire out_pred,
+				 output wire sel
 			 );
 
 gen gen_ins(
@@ -20,15 +21,25 @@ gen gen_ins(
 			.out(out)
 		);
 
-
-
 pred pred_ins(
 			 .clk(clk),
 			 .sgn(out),
-			 .shift(8'd62),
-			 .sgn_pre(out_pred)
+			 .shift(8'd30),
+			 .sgn_pre(out_pred_int)
 		 );
 
+selector selector_ins(
+					 .clk(clk),
+					 .gen(out),
+					 .fb(out_pred),
+					 .out(sel)
+				 );
+
+interrupter inter(
+							.clk(clk),
+							.gen(out_pred_int),
+							.out(out_pred)
+						);
 
 /*
 uart #(

@@ -16,9 +16,9 @@ localparam cnt_max = `div(1000 * CLK_MHZ, FREQ_KHZ),
 
 `reg(cnt_max) cnt = cnt_max - 1;
 
-assign out = cnt < cnt_duty;
-
 always @(posedge clk)
 	cnt <= (rst || !cnt) ? cnt_max - 1 : cnt - 1;
+
+assign out = cnt < cnt_duty;
 
 endmodule

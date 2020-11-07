@@ -1,4 +1,4 @@
-`include "modules/defines.sv"
+`include "./modules/defines.sv"
 
 module gen #(parameter
 						 CLK_MHZ = 100,
@@ -18,7 +18,6 @@ localparam CNT_MIN = `div(500 * CLK_MHZ, FREQ_KHZ_MAX),
 
 `reg(GEN_PARAMETER) gen_param = 0;
 `reg(CNT_MAX) cnt = CNT_MIN - 1 + GEN_PARAMETER;
-
 
 always @(posedge clk) begin
 	if (en) gen_param <= inp;
