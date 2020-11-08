@@ -1,28 +1,33 @@
 `include "./modules/defines.sv"
-module pwm_160478825394503044288640336992 #(parameter
-			 CLK_MHZ = 50,
-			 FREQ_KHZ = 400,
-			 DUTY = 40
-																					 )
+module int_gen_160486547415602987277149564336 #(parameter
+			 CLK_MHZ = 100,
+			 PAR_MAX_VAL = 255
+																							 )
 			 (
 				 input wire clk,
-				 input wire rst,
+				 input `wire(PAR_MAX_VAL) freq_par,
+				 input `wire(PAR_MAX_VAL) pw_par,
 				 output wire out
 			 );
 
-localparam cnt_max = `div(1000 * CLK_MHZ, FREQ_KHZ),
-					 cnt_duty = `div(DUTY * cnt_max, 100);
+localparam k = 100;
 
-`reg(cnt_max) cnt = cnt_max - 1;
+`reg(100 * CLK_MHZ) cnt = 0; // 500_000
 
-assign out = cnt < cnt_duty;
+always @(posedge clk) begin
+	if (cnt) cnt <= cnt - 1;
+	else begin
+		case(freq_par)
+			`lookup
+		endcase
+	end
+end
 
-always @(posedge clk)
-	cnt <= (rst || !cnt) ? cnt_max - 1 : cnt - 1;
+assign out = cnt < k * pw_par;
 
 endmodule
 
-	module edge_det_160478825394503044288640336992
+	module edge_det_160486547415602987277149564336
 	(
 		input wire clk,
 		input wire sgn,
@@ -44,7 +49,7 @@ endmodule
 
 
 
-	module sync_160478825394503044288640336992 #(parameter
+	module sync_160486547415602987277149564336 #(parameter
 			WIDTH = 1
 																							)
 	(
@@ -69,26 +74,22 @@ endmodule
 
 reg ff = 0;
 
-pwm_160478825394503044288640336992 #(.CLK_MHZ(100),
-																		 .FREQ_KHZ(25),
-																		 .DUTY(50)
-																		)
-																	 inter
-																	 (
-																		 .clk(clk),
-																		 .rst(1'b0),
-																		 .out(pwm_wire)
-																	 );
+int_gen_160486547415602987277149564336 i(
+																				 .clk(clk),
+																				 .freq_par(8'd4),	// 100 -> 1 MHz -> 1us
+																				 .pw_par(8'd13),
+																				 .out(int_wire)
+																			 );
 
-edge_det_160478825394503044288640336992 gen_p(.clk(clk), .sgn(gen), .out_p(gen_edge_p));
+edge_det_160486547415602987277149564336 gen_p(.clk(clk), .sgn(gen), .out_p(gen_edge_p));
 
-sync_160478825394503044288640336992 gen_d(
+sync_160486547415602987277149564336 gen_d(
 																			.clk(clk),
 																			.data_raw(gen),
 																			.data(gen_del)
 																		);
 
-always @(posedge clk) if (gen_edge_p) ff <= !pwm_wire;
+always @(posedge clk) if (gen_edge_p) ff <= !int_wire;
 
 assign out = ff && gen_del;
 

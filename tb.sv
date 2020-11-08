@@ -9,14 +9,16 @@ wire is_data_ready_tb, out_tb;
 `wire(CONF_PAR_MAX) sh_0, sh_1, sh_2, sh_3, sh_4;
 //wire[7:0] storage_tb;
 //wire[1:0] state_tb;
-wire out_pred_tb;
-wire sel_tb;
+wire gen_out_tb, fb_in_tb, fb_out_tb, sel_out_tb, int_out_tb;
+reg fb_tb = 0, fb_mask = 1;
 
 assign sh_0 = sh_reg_tb[0],
 			 sh_1 = sh_reg_tb[1],
 			 sh_2 = sh_reg_tb[2],
 			 sh_3 = sh_reg_tb[3],
-			 sh_4 = sh_reg_tb[4];
+			 sh_4 = sh_reg_tb[4],
+
+			 fb_in_tb = fb_tb && fb_mask;
 
 
 entry entry_inst(
@@ -25,9 +27,15 @@ entry entry_inst(
 				.sh_reg(sh_reg_tb),
 				//.storage(storage_tb),
 				//.state(state_tb)
-				.out(out_tb),
-				.out_pred(out_pred_tb),
-				.sel(sel_tb)
+
+				.gen_out(gen_out_tb),
+
+				.fb_in(fb_in_tb),
+				.fb_out(fb_out_tb),
+
+				.sel_out(sel_out_tb),
+
+				.int_out(int_out_tb)
 			);
 
 localparam //test_data = 49'b0_00101100_10_01001100_10_00101100_10_01001100_10_00101100, // 42424
@@ -51,6 +59,21 @@ initial begin
 	end
 end
 
+// fb
+initial begin
+	#1050;
+	while (1'b1) begin
+		#1250 fb_tb = ~fb_tb;
+	end
+end
+
+initial begin
+	#1050;
+	while (1'b1) begin
+		#(12 * 1250) fb_mask = ~fb_mask;
+	end
+end
+
 // creating VCD file for signal analysis
 initial begin
 	$dumpfile("out.vcd");
@@ -71,8 +94,15 @@ initial $monitor(
 		out_tb,,
 		//storage_tb,,
 		//state_tb
-		out_pred_tb,,
-		sel_tb,,
+
+		gen_out_tb,,
+
+		fb_in_tb,,
+		fb_out_tb,,
+
+		sel_out_tb,,
+
+		int_out_tb,,
 	);
 
 endmodule

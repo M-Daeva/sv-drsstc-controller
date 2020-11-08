@@ -1,9 +1,9 @@
 `include "./modules/defines.sv"
 
 module pwm #(parameter
-						 CLK_MHZ = 50,
-						 FREQ_KHZ = 400,
-						 DUTY = 40
+						 CLK_MHZ = 100,
+						 FREQ_KHZ = 100,
+						 DUTY = 50
 						)
 			 (
 				 input wire clk,

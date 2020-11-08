@@ -1,5 +1,5 @@
 `include "./modules/defines.sv"
-module edge_det_160478825394904598180987259881
+module edge_det_160486547416805405059108529866
 			 (
 				 input wire clk,
 				 input wire sgn,
@@ -60,7 +60,7 @@ wire cond_1 = data_edge_n,	// transmission start
 		 cond_2 = !frame_cnt,	// first data bit
 		 cond_0 = !data_bit_cnt;	// last data bit
 
-edge_det_160478825394904598180987259881 uart_n(.clk(clk), .sgn(uart_data), .out_n(data_edge_n));
+edge_det_160486547416805405059108529866 uart_n(.clk(clk), .sgn(uart_data), .out_n(data_edge_n));
 
 always @(posedge clk) begin
 	// state values

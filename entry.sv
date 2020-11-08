@@ -9,37 +9,44 @@ module entry (
 				 output `wire_2d(sh_reg, CONF_PAR_MAX, CONF_PAR_4),
 				 //output wire[7:0] storage,
 				 //output wire[1:0] state
-				 output wire out,
-				 output wire out_pred,
-				 output wire sel
+
+				 output wire gen_out,
+
+				 input wire fb_in,
+				 output wire fb_out,
+
+				 output wire sel_out,
+
+				 output wire int_out
 			 );
 
-gen gen_ins(
-			.clk(clk),
-			.en(1'b1),
-			.inp(8'd0),
-			.out(out)
-		);
+ref_gen rg1(
+					.clk(clk),
+					.inp(8'd0),
+					.out(gen_out)
+				);
 
-pred pred_ins(
+pred p1(
 			 .clk(clk),
-			 .sgn(out),
+			 .sgn(fb_in),
 			 .shift(8'd30),
-			 .sgn_pre(out_pred_int)
+			 .sgn_pre(fb_out)
 		 );
 
-selector selector_ins(
+selector s1(
 					 .clk(clk),
-					 .gen(out),
-					 .fb(out_pred),
-					 .out(sel)
+					 .gen(gen_out),
+					 .fb(fb_out),
+					 .out(sel_out)
 				 );
 
-interrupter inter(
+interrupter i1(
 							.clk(clk),
-							.gen(out_pred_int),
-							.out(out_pred)
+							.gen(sel_out),
+							.out(int_out)
 						);
+
+
 
 /*
 uart #(

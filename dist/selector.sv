@@ -1,5 +1,5 @@
 `include "./modules/defines.sv"
-module edge_det_160478825394809386058092837808
+module edge_det_160486547416609495228937060538
 			 (
 				 input wire clk,
 				 input wire sgn,
@@ -40,8 +40,8 @@ localparam TIMEOUT_CNT_MAX = CLK_MHZ * PERIODS_TO_SWITCH;
 `reg(PERIODS_TO_SWITCH) per_to_sw_cnt = PERIODS_TO_SWITCH;
 `reg(STATE_1) state = STATE_0;
 
-edge_det_160478825394809386058092837808 edge_det_gen(.clk(clk), .sgn(gen), .out_n(gen_edge_n));
-edge_det_160478825394809386058092837808 edge_det_fb(.clk(clk), .sgn(fb), .out_n(fb_edge_n));
+edge_det_160486547416609495228937060538 edge_det_gen(.clk(clk), .sgn(gen), .out_n(gen_edge_n));
+edge_det_160486547416609495228937060538 edge_det_fb(.clk(clk), .sgn(fb), .out_n(fb_edge_n));
 
 // state transition conditions
 wire cond_1 = !per_to_sw_cnt && fb_edge_n,	// some gen periods passed
@@ -51,7 +51,8 @@ always @(posedge clk) begin
 	// state values
 	case(state)
 		STATE_0: if (gen_edge_n) per_to_sw_cnt <= per_to_sw_cnt ? per_to_sw_cnt - 1 : PERIODS_TO_SWITCH;
-		STATE_1: if (!fb) timeout_cnt <= timeout_cnt - 1;
+		STATE_1: if (fb) timeout_cnt <= TIMEOUT_CNT_MAX - 1;
+			else if (timeout_cnt) timeout_cnt <= timeout_cnt - 1;
 	endcase
 
 	// state transitions

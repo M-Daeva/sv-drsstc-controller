@@ -32,7 +32,8 @@ always @(posedge clk) begin
 	// state values
 	case(state)
 		STATE_0: if (gen_edge_n) per_to_sw_cnt <= per_to_sw_cnt ? per_to_sw_cnt - 1 : PERIODS_TO_SWITCH;
-		STATE_1: if (!fb) timeout_cnt <= timeout_cnt - 1;
+		STATE_1: if (fb) timeout_cnt <= TIMEOUT_CNT_MAX - 1;
+			else if (timeout_cnt) timeout_cnt <= timeout_cnt - 1;
 	endcase
 
 	// state transitions

@@ -1,5 +1,5 @@
 `include "./modules/defines.sv"
-`include "./modules/pwm.sv"
+`include "./modules/int_gen.sv"
 `include "./modules/edge_det.sv"
 `include "./modules/sync.sv"
 
@@ -11,16 +11,12 @@ module interrupter (
 
 reg ff = 0;
 
-pwm #(.CLK_MHZ(100),
-			.FREQ_KHZ(25),
-			.DUTY(50)
-		 )
-		inter
-		(
-			.clk(clk),
-			.rst(1'b0),
-			.out(pwm_wire)
-		);
+int_gen i(
+					.clk(clk),
+					.freq_par(8'd4),	// 100 -> 1 MHz -> 1us
+					.pw_par(8'd13),
+					.out(int_wire)
+				);
 
 edge_det gen_p(.clk(clk), .sgn(gen), .out_p(gen_edge_p));
 
@@ -30,7 +26,7 @@ sync gen_d(
 			 .data(gen_del)
 		 );
 
-always @(posedge clk) if (gen_edge_p) ff <= !pwm_wire;
+always @(posedge clk) if (gen_edge_p) ff <= !int_wire;
 
 assign out = ff && gen_del;
 

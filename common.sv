@@ -1,5 +1,5 @@
 `include "./dist/uart.sv"
-`include "./dist/gen.sv"
+`include "./dist/ref_gen.sv"
 `include "./dist/pred.sv"
 `include "./dist/selector.sv"
 `include "./dist/interrupter.sv"
