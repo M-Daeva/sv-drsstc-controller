@@ -17,7 +17,10 @@ module entry (
 
 				 output wire sel_out,
 
-				 output wire int_out
+				 input wire int_ocd,
+				 output wire int_out,
+
+				 output wire ocd_lvl_out
 			 );
 
 ref_gen rg1(
@@ -43,10 +46,16 @@ selector s1(
 interrupter i1(
 							.clk(clk),
 							.gen(sel_out),
+							.ocd(int_ocd),
 							.out(int_out)
 						);
 
-
+ocd_lvl #(.FREQ_KHZ(1000))
+				o(
+					.clk(clk),
+					.pw_par(7'd87),
+					.out(ocd_lvl_out)
+				);
 
 /*
 uart #(

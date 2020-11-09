@@ -11,7 +11,7 @@ module int_gen #(parameter
 				 output wire out
 			 );
 
-localparam k = 100;
+localparam k = 100;	// for pw_par in microseconds
 
 `reg(100 * CLK_MHZ) cnt = 0; // 500_000
 

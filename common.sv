@@ -3,6 +3,7 @@
 `include "./dist/pred.sv"
 `include "./dist/selector.sv"
 `include "./dist/interrupter.sv"
+`include "./dist/ocd_lvl.sv"
 
 /*
 real uart frequency is 9600 Hz
@@ -11,7 +12,7 @@ assume 960 kHz for faster simulation
 
 localparam 	GEN_CLK_FREQ = 100_000_000,
 						TB_CLK_FREQ = 1_000_000_000,
-						UART_FREQ = 960_000,
+						UART_FREQ = 320_000,
 
 						FRAME_FREQ = 2 * UART_FREQ,
 						FRAME = `div(GEN_CLK_FREQ, FRAME_FREQ),
