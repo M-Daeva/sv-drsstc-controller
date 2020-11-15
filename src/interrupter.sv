@@ -2,6 +2,7 @@
 `include "./modules/int_gen.sv"
 `include "./modules/edge_det.sv"
 `include "./modules/sync.sv"
+`include "./modules/delay.sv"
 
 module interrupter #(parameter
 										 CLK_MHZ = 100,
@@ -20,6 +21,14 @@ module interrupter #(parameter
 				 output wire out_n
 			 );
 
+// cdc synchronizer
+sync #(.WIDTH(1))
+		 s1(
+			 .clk(clk),
+			 .data_raw(ocd),
+			 .data(ocd_s)
+		 );
+
 int_gen #(.CLK_MHZ(CLK_MHZ),
 					.FREQ_MIN_HZ(FREQ_MIN_HZ),
 					.PW_STEP_MUL(PW_STEP_MUL),
@@ -33,11 +42,13 @@ int_gen #(.CLK_MHZ(CLK_MHZ),
 
 edge_det gen_p(.clk(clk), .sgn(gen), .out_p(gen_edge_p));
 
-sync gen_d(
-			 .clk(clk),
-			 .data_raw(gen),
-			 .data(gen_del)
-		 );
+// ff delay matching
+delay #(.WIDTH(1))
+			d1(
+				.clk(clk),
+				.data_raw(gen),
+				.data(gen_del)
+			);
 
 typedef enum { STATE_0, STATE_1 } State;
 
@@ -46,7 +57,7 @@ typedef enum { STATE_0, STATE_1 } State;
 reg ff = 0;
 
 // state transition conditions
-wire cond_1 = ocd,
+wire cond_1 = ocd_s,
 		 cond_0 = !skip_cnt;
 
 always @(posedge clk) begin

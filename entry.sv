@@ -1,8 +1,5 @@
 `include "common.sv"
 
-// 9600 Hz uart module uses 54 LE
-
-
 module entry (
 				 input wire clk,
 
@@ -23,6 +20,11 @@ module entry (
 				 output wire int_out_n
 			 );
 
+// assign uart_ref_gen = sh_reg_tb[4],
+// 			 uart_pred = sh_reg_tb[3],
+// 			 uart_ocd_lvl = sh_reg_tb[2],
+// 			 uart_int_freq = sh_reg_tb[1],
+// 			 uart_int_pw = sh_reg_tb[0],
 
 uart #(
 			 .CONF_PAR_MAX(CONF_PAR_MAX),
@@ -40,14 +42,14 @@ ref_gen #(.CLK_MHZ(GEN_CLK_FREQ_MHZ),
 					.GEN_PARAMETER(255))
 				rg1(
 					.clk(clk),
-					.inp(8'd127),// 200,400,132
+					.inp(8'd127),	// 8d'127 - 200 kHz
 					.out(gen_out)
 				);
 
 pred p1(
 			 .clk(clk),
 			 .sgn(fb_in),
-			 .shift(8'd30),
+			 .shift(8'd30),	//8'd30
 			 .sgn_pre(fb_out)
 		 );
 
@@ -77,11 +79,10 @@ interrupter #(.CLK_MHZ(GEN_CLK_FREQ_MHZ),
 						);
 
 ocd_lvl #(.CLK_MHZ(GEN_CLK_FREQ_MHZ),
-					.FREQ_KHZ(500),
 					.PAR_MAX_VAL(200))
 				o(
 					.clk(clk),
-					.pw_par(8'd150),
+					.pw_par(8'd87),
 					.out(ocd_lvl_out)
 				);
 

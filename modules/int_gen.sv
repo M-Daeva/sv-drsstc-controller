@@ -13,7 +13,7 @@ module int_gen #(parameter
 				 output wire out
 			 );
 
-localparam FREQ_RATIO = `div(1e6 * CLK_MHZ, FREQ_MIN_HZ);
+localparam FREQ_RATIO = `div(1_000_000 * CLK_MHZ, FREQ_MIN_HZ);
 
 `reg(FREQ_RATIO) cnt = 0;
 

@@ -1,5 +1,5 @@
 `include "./modules/defines.sv"
-module edge_det_160543718240907097158204752341
+module edge_det_160546390607901833961867023739
 			 (
 				 input wire clk,
 				 input wire sgn,
@@ -20,13 +20,23 @@ always @(posedge clk)
 endmodule
 
 
-	/*
-	0 - ref_gen
-	1 - phase_shift
-	2 - ocd_lvl
-	3 - inter_freq
-	4 - inter_duty
-	*/
+
+	module sync_160546390607901833961867023739 #(parameter
+			WIDTH = 1
+																							)
+	(
+		input wire clk,
+		input wire[WIDTH-1:0] data_raw,
+		output reg[WIDTH-1:0] data = 0
+	);
+
+reg[WIDTH-1:0] internal = 0;
+
+always @(posedge clk)
+	{ data, internal } <= { internal, data_raw };
+
+endmodule
+
 
 	typedef enum { CONF_PAR_[5] } Conf_par;
 
@@ -41,6 +51,14 @@ module uart #(parameter
 				 input wire uart_data,
 				 output `reg_2d(sh_reg, CONF_PAR_MAX, CONF_PAR_4)
 			 );
+
+// cdc synchronizer
+sync_160546390607901833961867023739 #(.WIDTH(1))
+																		s1(
+																			.clk(clk),
+																			.data_raw(uart_data),
+																			.data(uart_data_s)
+																		);
 
 // initializing sh_reg with zeroes
 initial for(int i = 0; i <= CONF_PAR_4; i++) sh_reg[i] = 0;
@@ -58,7 +76,7 @@ wire cond_1 = data_edge_n,	// transmission start
 		 cond_2 = !frame_cnt,	// first data bit
 		 cond_0 = !data_bit_cnt;	// last data bit
 
-edge_det_160543718240907097158204752341 uart_n(.clk(clk), .sgn(uart_data), .out_n(data_edge_n));
+edge_det_160546390607901833961867023739 uart_n(.clk(clk), .sgn(uart_data_s), .out_n(data_edge_n));
 
 always @(posedge clk) begin
 	// state values
@@ -68,7 +86,7 @@ always @(posedge clk) begin
 			else begin
 				frame_cnt <= FRAME_CNT_MAX_2;
 				data_bit_cnt <= data_bit_cnt - 1;
-				storage <= {uart_data, storage[`width(CONF_PAR_MAX)-1:1]};
+				storage <= {uart_data_s, storage[`width(CONF_PAR_MAX)-1:1]};
 			end
 	endcase
 
@@ -77,7 +95,7 @@ always @(posedge clk) begin
 		STATE_0: if (cond_1) state <= STATE_1;
 		STATE_1: if (cond_2) begin
 				state <= STATE_2;
-				storage <= {uart_data, storage[`width(CONF_PAR_MAX)-1:1]};
+				storage <= {uart_data_s, storage[`width(CONF_PAR_MAX)-1:1]};
 			end
 		STATE_2: if (cond_0) begin
 				state <= STATE_0;
