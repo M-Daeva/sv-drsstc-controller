@@ -1,5 +1,5 @@
 `include "./modules/defines.sv"
-module edge_det_160494775758905739505256999209
+module edge_det_160543718240907097158204752341
 			 (
 				 input wire clk,
 				 input wire sgn,
@@ -40,8 +40,6 @@ module uart #(parameter
 				 input wire clk,
 				 input wire uart_data,
 				 output `reg_2d(sh_reg, CONF_PAR_MAX, CONF_PAR_4)
-				 //output `reg(CONF_PAR_MAX) storage = 0,
-				 //output `reg(STATE_2) state = STATE_0
 			 );
 
 // initializing sh_reg with zeroes
@@ -60,7 +58,7 @@ wire cond_1 = data_edge_n,	// transmission start
 		 cond_2 = !frame_cnt,	// first data bit
 		 cond_0 = !data_bit_cnt;	// last data bit
 
-edge_det_160494775758905739505256999209 uart_n(.clk(clk), .sgn(uart_data), .out_n(data_edge_n));
+edge_det_160543718240907097158204752341 uart_n(.clk(clk), .sgn(uart_data), .out_n(data_edge_n));
 
 always @(posedge clk) begin
 	// state values

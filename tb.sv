@@ -3,20 +3,23 @@
 
 module test_entry;
 
-reg clk_tb, uart_data_tb, uart_clk_tb;
-wire is_data_ready_tb, out_tb;
-`wire_2d(sh_reg_tb, CONF_PAR_MAX, CONF_PAR_4);
-`wire(CONF_PAR_MAX) sh_0, sh_1, sh_2, sh_3, sh_4;
-//wire[7:0] storage_tb;
-//wire[1:0] state_tb;
-wire gen_out_tb, fb_in_tb, fb_out_tb, sel_out_tb, int_ocd_tb, int_out_tb, ocd_lvl_out_tb;
-reg fb_tb = 0, fb_mask = 1, ocd_tb = 0;
+reg clk_tb = 0, uart_data_tb = 1, uart_clk_tb = 0, fb_tb = 0, fb_mask = 1, ocd_tb = 0;
 
-assign sh_0 = sh_reg_tb[0],
-			 sh_1 = sh_reg_tb[1],
-			 sh_2 = sh_reg_tb[2],
-			 sh_3 = sh_reg_tb[3],
-			 sh_4 = sh_reg_tb[4],
+`wire_2d(sh_reg_tb, CONF_PAR_MAX, CONF_PAR_4);
+`wire(CONF_PAR_MAX) uart_ref_gen, uart_pred, uart_int_freq, uart_int_pw, uart_ocd_lvl;
+wire gen_out_tb, fb_in_tb, fb_out_tb, sel_out_tb, ocd_lvl_out_tb, int_ocd_tb, int_out_p_tb, int_out_n_tb;
+
+// 0 - ref_gen
+// 1 - phase_shift
+// 2 - ocd_lvl
+// 3 - inter_freq
+// 4 - inter_duty
+
+assign uart_ref_gen = sh_reg_tb[4],
+			 uart_pred = sh_reg_tb[3],
+			 uart_ocd_lvl = sh_reg_tb[2],
+			 uart_int_freq = sh_reg_tb[1],
+			 uart_int_pw = sh_reg_tb[0],
 
 			 fb_in_tb = fb_tb && fb_mask,
 			 int_ocd_tb = ocd_tb;
@@ -24,10 +27,9 @@ assign sh_0 = sh_reg_tb[0],
 
 entry entry_inst(
 				.clk(clk_tb),
+
 				.uart_data(uart_data_tb),
 				.sh_reg(sh_reg_tb),
-				//.storage(storage_tb),
-				//.state(state_tb)
 
 				.gen_out(gen_out_tb),
 
@@ -36,10 +38,11 @@ entry entry_inst(
 
 				.sel_out(sel_out_tb),
 
-				.int_ocd(int_ocd_tb),
-				.int_out(int_out_tb),
+				.ocd_lvl_out(ocd_lvl_out_tb),
 
-				.ocd_lvl_out(ocd_lvl_out_tb)
+				.int_ocd(int_ocd_tb),
+				.int_out_p(int_out_p_tb),
+				.int_out_n(int_out_n_tb)
 			);
 
 localparam //test_data = 49'b0_00101100_10_01001100_10_00101100_10_01001100_10_00101100, // 42424
@@ -53,10 +56,6 @@ always #FRAME_TB uart_clk_tb = ~uart_clk_tb;
 initial #(2 * (packet_size + 2) * FRAME_TB) $finish;
 
 initial begin
-	clk_tb = 0;
-	uart_data_tb = 1;
-	uart_clk_tb = 0;
-
 	for (int i = packet_size; i > 0; i--) begin
 		#(2 * FRAME_TB) uart_data_tb = test_data[i-1];
 		if (i == 1) #(2 * FRAME_TB) uart_data_tb = 1;
@@ -93,16 +92,15 @@ end
 initial $monitor(
 		$stime,,
 		clk_tb,,
+
 		uart_clk_tb,,
 		uart_data_tb,,
-		sh_0,,
-		sh_1,,
-		sh_2,,
-		sh_3,,
-		sh_4,,
-		out_tb,,
-		//storage_tb,,
-		//state_tb
+
+		uart_ref_gen,,
+		uart_pred,,
+		uart_int_freq,,
+		uart_int_pw,,
+		uart_ocd_lvl,,
 
 		gen_out_tb,,
 
@@ -111,10 +109,11 @@ initial $monitor(
 
 		sel_out_tb,,
 
-		int_ocd_tb,,
-		int_out_tb,,
+		ocd_lvl_out_tb,,
 
-		ocd_lvl_out_tb
+		int_ocd_tb,,
+		int_out_p_tb,,
+		int_out_n_tb,,
 	);
 
 endmodule

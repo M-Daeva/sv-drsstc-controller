@@ -1,6 +1,8 @@
 `include "./modules/defines.sv"
-module int_gen_160494775758309523168418574268 #(parameter
+module int_gen_160543718240304243883456118982 #(parameter
 			 CLK_MHZ = 100,
+			 FREQ_MIN_HZ = 10_000,
+			 PW_STEP_MUL = 1,
 			 PAR_MAX_VAL = 255
 																							 )
 			 (
@@ -10,9 +12,9 @@ module int_gen_160494775758309523168418574268 #(parameter
 				 output wire out
 			 );
 
-localparam k = 100;	// for pw_par in microseconds
+localparam FREQ_RATIO = `div(1e6 * CLK_MHZ, FREQ_MIN_HZ);
 
-`reg(100 * CLK_MHZ) cnt = 0; // 500_000
+`reg(FREQ_RATIO) cnt = 0;
 
 always @(posedge clk) begin
 	if (cnt) cnt <= cnt - 1;
@@ -23,11 +25,11 @@ always @(posedge clk) begin
 	end
 end
 
-assign out = cnt < k * pw_par;
+assign out = cnt < PW_STEP_MUL * pw_par;
 
 endmodule
 
-	module edge_det_160494775758309523168418574268
+	module edge_det_160543718240304243883456118982
 	(
 		input wire clk,
 		input wire sgn,
@@ -49,7 +51,7 @@ endmodule
 
 
 
-	module sync_160494775758309523168418574268 #(parameter
+	module sync_160543718240304243883456118982 #(parameter
 			WIDTH = 1
 																							)
 	(
@@ -67,25 +69,36 @@ endmodule
 
 
 	module interrupter #(parameter
-											 SKIP_CNT_MAX = 3
+											 CLK_MHZ = 100,
+											 FREQ_MIN_HZ = 10_000,
+											 PW_STEP_MUL = 1,
+											 SKIP_CNT_MAX = 3,
+											 PAR_MAX_VAL = 255
 											)
 	(
 		input wire clk,
 		input wire gen,
 		input wire ocd,
-		output wire out
+		input `wire(PAR_MAX_VAL) freq_par,
+		input `wire(PAR_MAX_VAL) pw_par,
+		output wire out_p,
+		output wire out_n
 	);
 
-int_gen_160494775758309523168418574268 i(
+int_gen_160543718240304243883456118982 #(.CLK_MHZ(CLK_MHZ),
+																			 .FREQ_MIN_HZ(FREQ_MIN_HZ),
+																			 .PW_STEP_MUL(PW_STEP_MUL),
+																			 .PAR_MAX_VAL(PAR_MAX_VAL))
+																			 i(
 																				 .clk(clk),
-																				 .freq_par(8'd1),	// 100 -> 1 MHz -> 1us
-																				 .pw_par(8'd50),
+																				 .freq_par(freq_par),
+																				 .pw_par(pw_par),
 																				 .out(int_wire)
 																			 );
 
-edge_det_160494775758309523168418574268 gen_p(.clk(clk), .sgn(gen), .out_p(gen_edge_p));
+edge_det_160543718240304243883456118982 gen_p(.clk(clk), .sgn(gen), .out_p(gen_edge_p));
 
-sync_160494775758309523168418574268 gen_d(
+sync_160543718240304243883456118982 gen_d(
 																			.clk(clk),
 																			.data_raw(gen),
 																			.data(gen_del)
@@ -121,6 +134,7 @@ always @(posedge clk) begin
 	endcase
 end
 
-assign out = ff && gen_del;
+assign out_p = ff && gen_del,
+			 out_n = ff && ~gen_del;
 
 endmodule

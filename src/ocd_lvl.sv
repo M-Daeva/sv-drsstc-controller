@@ -3,7 +3,7 @@
 module ocd_lvl #(parameter
 								 CLK_MHZ = 100,
 								 FREQ_KHZ = 100,
-								 PAR_MAX_VAL = 100
+								 PAR_MAX_VAL = 255
 								)
 			 (
 				 input wire clk,

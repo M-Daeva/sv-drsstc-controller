@@ -21,8 +21,6 @@ module uart #(parameter
 				 input wire clk,
 				 input wire uart_data,
 				 output `reg_2d(sh_reg, CONF_PAR_MAX, CONF_PAR_4)
-				 //output `reg(CONF_PAR_MAX) storage = 0,
-				 //output `reg(STATE_2) state = STATE_0
 			 );
 
 // initializing sh_reg with zeroes

@@ -22,4 +22,7 @@ localparam 	GEN_CLK_FREQ = 100_000_000,
 						CONF_PAR_MAX = 255,
 						FRAME_CNT_MAX_1 = 3 * FRAME,
 						FRAME_CNT_MAX_2 = 2 * FRAME,
-						DATA_BIT_CNT_MAX = 7;
+						DATA_BIT_CNT_MAX = 7,
+
+						GEN_CLK_FREQ_MHZ = 100,
+						INTER_FREQ_MIN_HZ = 1_000;

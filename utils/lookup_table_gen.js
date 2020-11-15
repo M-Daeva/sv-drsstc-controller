@@ -1,6 +1,14 @@
 import fs from "fs";
 
-const ratio = 1e4, // 1e8
+//const l = console.log.bind(console);
+const common = fs.readFileSync("./common.sv", "utf8"),
+  FREQ_CLK_MHZ = +common
+    .match(/GEN_CLK_FREQ_MHZ[\s\t=]*([\d_]*)/)[1]
+    .replace(/_/g, ""),
+  FREQ_MIN_HZ = +common
+    .match(/INTER_FREQ_MIN_HZ[\s\t=]*([\d_]*)/)[1]
+    .replace(/_/g, ""),
+  ratio = (1e6 * FREQ_CLK_MHZ) / FREQ_MIN_HZ, // 1e8
   dig = Math.ceil(Math.log2(ratio)),
   getVal = (i) => Math.round(ratio / i) - 1,
   getRow = (i) => `8'd${i}: cnt <= ${dig}'d${getVal(i)}; \\\n`;

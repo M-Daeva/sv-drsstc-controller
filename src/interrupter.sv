@@ -4,19 +4,30 @@
 `include "./modules/sync.sv"
 
 module interrupter #(parameter
-										 SKIP_CNT_MAX = 3
+										 CLK_MHZ = 100,
+										 FREQ_MIN_HZ = 10_000,
+										 PW_STEP_MUL = 1,
+										 SKIP_CNT_MAX = 3,
+										 PAR_MAX_VAL = 255
 										)
 			 (
 				 input wire clk,
 				 input wire gen,
 				 input wire ocd,
-				 output wire out
+				 input `wire(PAR_MAX_VAL) freq_par,
+				 input `wire(PAR_MAX_VAL) pw_par,
+				 output wire out_p,
+				 output wire out_n
 			 );
 
-int_gen i(
+int_gen #(.CLK_MHZ(CLK_MHZ),
+					.FREQ_MIN_HZ(FREQ_MIN_HZ),
+					.PW_STEP_MUL(PW_STEP_MUL),
+					.PAR_MAX_VAL(PAR_MAX_VAL))
+				i(
 					.clk(clk),
-					.freq_par(8'd1),	// 100 -> 1 MHz -> 1us
-					.pw_par(8'd50),
+					.freq_par(freq_par),
+					.pw_par(pw_par),
 					.out(int_wire)
 				);
 
@@ -58,6 +69,7 @@ always @(posedge clk) begin
 	endcase
 end
 
-assign out = ff && gen_del;
+assign out_p = ff && gen_del,
+			 out_n = ff && ~gen_del;
 
 endmodule

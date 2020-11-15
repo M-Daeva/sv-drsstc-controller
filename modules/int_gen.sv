@@ -2,6 +2,8 @@
 
 module int_gen #(parameter
 								 CLK_MHZ = 100,
+								 FREQ_MIN_HZ = 10_000,
+								 PW_STEP_MUL = 1,
 								 PAR_MAX_VAL = 255
 								)
 			 (
@@ -11,9 +13,9 @@ module int_gen #(parameter
 				 output wire out
 			 );
 
-localparam k = 100;	// for pw_par in microseconds
+localparam FREQ_RATIO = `div(1e6 * CLK_MHZ, FREQ_MIN_HZ);
 
-`reg(100 * CLK_MHZ) cnt = 0; // 500_000
+`reg(FREQ_RATIO) cnt = 0;
 
 always @(posedge clk) begin
 	if (cnt) cnt <= cnt - 1;
@@ -24,6 +26,6 @@ always @(posedge clk) begin
 	end
 end
 
-assign out = cnt < k * pw_par;
+assign out = cnt < PW_STEP_MUL * pw_par;
 
 endmodule
