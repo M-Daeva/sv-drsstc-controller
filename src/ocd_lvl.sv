@@ -10,12 +10,10 @@ module ocd_lvl #(parameter
 				 output wire out
 			 );
 
-localparam FREQ_KHZ = `div(1000 * CLK_MHZ, PAR_MAX_VAL);
-
-`reg(PAR_MAX_VAL) cnt = PAR_MAX_VAL - 1;
+`reg(PAR_MAX_VAL) cnt = 0;
 
 always @(posedge clk)
-	cnt <= !cnt ? PAR_MAX_VAL - 1 : cnt - 1;
+	cnt <= cnt - 1;
 
 assign out = cnt < pw_par;
 

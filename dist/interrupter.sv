@@ -1,10 +1,10 @@
 `include "./modules/defines.sv"
-module int_gen_160546390607402675699788025321 #(parameter
+module int_gen_1605637034407017416978052889576 #(parameter
 			 CLK_MHZ = 100,
 			 FREQ_MIN_HZ = 10_000,
 			 PW_STEP_MUL = 1,
 			 PAR_MAX_VAL = 255
-																							 )
+																								)
 			 (
 				 input wire clk,
 				 input `wire(PAR_MAX_VAL) freq_par,
@@ -29,7 +29,7 @@ assign out = cnt < PW_STEP_MUL * pw_par;
 
 endmodule
 
-	module edge_det_160546390607402675699788025321
+	module edge_det_1605637034407017416978052889576
 	(
 		input wire clk,
 		input wire sgn,
@@ -51,9 +51,9 @@ endmodule
 
 
 
-	module sync_160546390607402675699788025321 #(parameter
+	module sync_1605637034407017416978052889576 #(parameter
 			WIDTH = 1
-																							)
+																							 )
 	(
 		input wire clk,
 		input wire[WIDTH-1:0] data_raw,
@@ -69,9 +69,9 @@ endmodule
 
 
 
-	module delay_160546390607402675699788025321 #(parameter
+	module delay_1605637034407017416978052889576 #(parameter
 			WIDTH = 2
-																							 )
+																								)
 	(
 		input wire clk,
 		input wire data_raw,
@@ -108,33 +108,33 @@ endmodule
 	);
 
 // cdc synchronizer
-sync_160546390607402675699788025321 #(.WIDTH(1))
-																		s1(
-																			.clk(clk),
-																			.data_raw(ocd),
-																			.data(ocd_s)
-																		);
-
-int_gen_160546390607402675699788025321 #(.CLK_MHZ(CLK_MHZ),
-																			 .FREQ_MIN_HZ(FREQ_MIN_HZ),
-																			 .PW_STEP_MUL(PW_STEP_MUL),
-																			 .PAR_MAX_VAL(PAR_MAX_VAL))
-																			 i(
-																				 .clk(clk),
-																				 .freq_par(freq_par),
-																				 .pw_par(pw_par),
-																				 .out(int_wire)
-																			 );
-
-edge_det_160546390607402675699788025321 gen_p(.clk(clk), .sgn(gen), .out_p(gen_edge_p));
-
-// ff delay_160546390607402675699788025321 matching
-delay_160546390607402675699788025321 #(.WIDTH(1))
-																		 d1(
+sync_1605637034407017416978052889576 #(.WIDTH(1))
+																		 s1(
 																			 .clk(clk),
-																			 .data_raw(gen),
-																			 .data(gen_del)
+																			 .data_raw(ocd),
+																			 .data(ocd_s)
 																		 );
+
+int_gen_1605637034407017416978052889576 #(.CLK_MHZ(CLK_MHZ),
+																				.FREQ_MIN_HZ(FREQ_MIN_HZ),
+																				.PW_STEP_MUL(PW_STEP_MUL),
+																				.PAR_MAX_VAL(PAR_MAX_VAL))
+																				i(
+																					.clk(clk),
+																					.freq_par(freq_par),
+																					.pw_par(pw_par),
+																					.out(int_wire)
+																				);
+
+edge_det_1605637034407017416978052889576 gen_p(.clk(clk), .sgn(gen), .out_p(gen_edge_p), .out(gen_edge));
+
+// ff delay_1605637034407017416978052889576 matching
+delay_1605637034407017416978052889576 #(.WIDTH(1))
+																			d1(
+																				.clk(clk),
+																				.data_raw(gen),
+																				.data(gen_del)
+																			);
 
 typedef enum { STATE_0, STATE_1 } State;
 
@@ -150,9 +150,9 @@ always @(posedge clk) begin
 	// state values
 	case(state)
 		STATE_0: if (gen_edge_p) ff <= !int_wire;
-		STATE_1: if (gen_edge_p && skip_cnt) begin
+		STATE_1: if (gen_edge && skip_cnt) begin
 				ff <= 0;
-				skip_cnt <= skip_cnt - 1;
+				if (gen) skip_cnt <= skip_cnt - 1;
 			end
 	endcase
 

@@ -1,5 +1,5 @@
 `include "./modules/defines.sv"
-module edge_det_160546390607807991747644277509
+module edge_det_1605637034421006579641844750683
 			 (
 				 input wire clk,
 				 input wire sgn,
@@ -40,8 +40,8 @@ localparam TIMEOUT_CNT_MAX = CLK_MHZ * PERIODS_TO_SWITCH;
 `reg(PERIODS_TO_SWITCH) per_to_sw_cnt = PERIODS_TO_SWITCH;
 `reg(STATE_1) state = STATE_0;
 
-edge_det_160546390607807991747644277509 edge_det_gen(.clk(clk), .sgn(gen), .out_n(gen_edge_n));
-edge_det_160546390607807991747644277509 edge_det_fb(.clk(clk), .sgn(fb), .out_n(fb_edge_n));
+edge_det_1605637034421006579641844750683 edge_det_gen(.clk(clk), .sgn(gen), .out_n(gen_edge_n));
+edge_det_1605637034421006579641844750683 edge_det_fb(.clk(clk), .sgn(fb), .out_n(fb_edge_n));
 
 // state transition conditions
 wire cond_1 = !per_to_sw_cnt && fb_edge_n,	// some gen periods passed

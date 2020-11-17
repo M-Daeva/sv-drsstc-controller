@@ -1,5 +1,5 @@
 `include "./modules/defines.sv"
-module edge_det_160546390607901833961867023739
+module edge_det_1605637034429043225277892067226
 			 (
 				 input wire clk,
 				 input wire sgn,
@@ -21,9 +21,9 @@ endmodule
 
 
 
-	module sync_160546390607901833961867023739 #(parameter
+	module sync_1605637034429043225277892067226 #(parameter
 			WIDTH = 1
-																							)
+																							 )
 	(
 		input wire clk,
 		input wire[WIDTH-1:0] data_raw,
@@ -53,12 +53,12 @@ module uart #(parameter
 			 );
 
 // cdc synchronizer
-sync_160546390607901833961867023739 #(.WIDTH(1))
-																		s1(
-																			.clk(clk),
-																			.data_raw(uart_data),
-																			.data(uart_data_s)
-																		);
+sync_1605637034429043225277892067226 #(.WIDTH(1))
+																		 s1(
+																			 .clk(clk),
+																			 .data_raw(uart_data),
+																			 .data(uart_data_s)
+																		 );
 
 // initializing sh_reg with zeroes
 initial for(int i = 0; i <= CONF_PAR_4; i++) sh_reg[i] = 0;
@@ -76,7 +76,7 @@ wire cond_1 = data_edge_n,	// transmission start
 		 cond_2 = !frame_cnt,	// first data bit
 		 cond_0 = !data_bit_cnt;	// last data bit
 
-edge_det_160546390607901833961867023739 uart_n(.clk(clk), .sgn(uart_data_s), .out_n(data_edge_n));
+edge_det_1605637034429043225277892067226 uart_n(.clk(clk), .sgn(uart_data_s), .out_n(data_edge_n));
 
 always @(posedge clk) begin
 	// state values

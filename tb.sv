@@ -29,14 +29,14 @@ entry entry_inst(
 				.clk(clk_tb),
 
 				.uart_data(uart_data_tb),
-				.sh_reg(sh_reg_tb),
+				//.sh_reg(sh_reg_tb),
 
-				.gen_out(gen_out_tb),
+				//.gen_out(gen_out_tb),
 
 				.fb_in(fb_in_tb),
-				.fb_out(fb_out_tb),
+				//.fb_out(fb_out_tb),
 
-				.sel_out(sel_out_tb),
+				//.sel_out(sel_out_tb),
 
 				.ocd_lvl_out(ocd_lvl_out_tb),
 
@@ -45,14 +45,15 @@ entry entry_inst(
 				.int_out_n(int_out_n_tb)
 			);
 
-localparam test_data = 69'b0_11111110_10_01111000_10_11101010_10_01010000_10_10000000_10_11111110_10_01111000,
+localparam test_data = 49'b0_11111110_10_00111100_10_11101010_10_01010000_10_10000000,
 					 packet_size = $bits(test_data);
 
 // clk
 always #CLK_FRAME_TB clk_tb = ~clk_tb;
 always #FRAME_TB uart_clk_tb = ~uart_clk_tb;
 
-initial #(2 * (packet_size + 2) * FRAME_TB) $finish;
+localparam mul = 20;
+initial #(mul * 2 * (packet_size + 2) * FRAME_TB) $finish;
 
 initial begin
 	for (int i = packet_size; i > 0; i--) begin
@@ -66,18 +67,18 @@ end
 int i = 0;
 
 initial begin
-	#1050;
+	#5500;
 	while (1'b1) begin
-		#1250 fb_tb = ~fb_tb;
+		#2500 fb_tb = ~fb_tb;
 		i++;
-		ocd_tb = (i == 6) || (i == 89) ? 1 : 0;
+		ocd_tb = (i == 12) || (i == 89) ? 1 : 0;
 	end
 end
 
 initial begin
-	#1050;
+	#0;
 	while (1'b1) begin
-		#(24 * 1250) fb_mask = ~fb_mask;
+		#(25 * 2500) fb_mask = ~fb_mask;
 	end
 end
 
@@ -95,18 +96,18 @@ initial $monitor(
 		uart_clk_tb,,
 		uart_data_tb,,
 
-		uart_ref_gen,,
-		uart_pred,,
-		uart_int_freq,,
-		uart_int_pw,,
-		uart_ocd_lvl,,
+		// uart_ref_gen,,
+		// uart_pred,,
+		// uart_int_freq,,
+		// uart_int_pw,,
+		// uart_ocd_lvl,,
 
-		gen_out_tb,,
+		// gen_out_tb,,
 
 		fb_in_tb,,
-		fb_out_tb,,
+		//fb_out_tb,,
 
-		sel_out_tb,,
+		//sel_out_tb,,
 
 		ocd_lvl_out_tb,,
 

@@ -40,7 +40,7 @@ int_gen #(.CLK_MHZ(CLK_MHZ),
 					.out(int_wire)
 				);
 
-edge_det gen_p(.clk(clk), .sgn(gen), .out_p(gen_edge_p));
+edge_det gen_p(.clk(clk), .sgn(gen), .out_p(gen_edge_p), .out(gen_edge));
 
 // ff delay matching
 delay #(.WIDTH(1))
@@ -64,9 +64,9 @@ always @(posedge clk) begin
 	// state values
 	case(state)
 		STATE_0: if (gen_edge_p) ff <= !int_wire;
-		STATE_1: if (gen_edge_p && skip_cnt) begin
+		STATE_1: if (gen_edge && skip_cnt) begin
 				ff <= 0;
-				skip_cnt <= skip_cnt - 1;
+				if (gen) skip_cnt <= skip_cnt - 1;
 			end
 	endcase
 

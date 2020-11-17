@@ -19,8 +19,7 @@ sync #(.WIDTH(1))
 			 .data(sgn_s)
 		 );
 
-`reg(PRED_PARAMETER) cnt;
-initial cnt = shift;
+`reg(PRED_PARAMETER) cnt = 0;	// no delay for first edge in first pulse
 
 always @(posedge clk) begin
 	if (sgn_s ^ sgn_pre) begin

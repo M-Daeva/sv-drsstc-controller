@@ -1,7 +1,7 @@
 `include "./modules/defines.sv"
-module sync_16054639060770353171673374719 #(parameter
+module sync_1605637034411037879638956013717 #(parameter
 			 WIDTH = 1
-																					 )
+																						 )
 			 (
 				 input wire clk,
 				 input wire[WIDTH-1:0] data_raw,
@@ -27,15 +27,14 @@ endmodule
 	);
 
 // cdc synchronizer
-sync_16054639060770353171673374719 #(.WIDTH(1))
-																	 s1(
-																		 .clk(clk),
-																		 .data_raw(sgn),
-																		 .data(sgn_s)
-																	 );
+sync_1605637034411037879638956013717 #(.WIDTH(1))
+																		 s1(
+																			 .clk(clk),
+																			 .data_raw(sgn),
+																			 .data(sgn_s)
+																		 );
 
-`reg(PRED_PARAMETER) cnt;
-initial cnt = shift;
+`reg(PRED_PARAMETER) cnt = 0;	// no delay for first edge in first pulse
 
 always @(posedge clk) begin
 	if (sgn_s ^ sgn_pre) begin

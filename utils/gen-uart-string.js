@@ -1,6 +1,6 @@
 const l = console.log.bind(console);
 
-const dec = [127, 30, 87, 10, 1, 127, 30];
+const dec = [127, 60, 87, 10, 1]; // [4:0, 4:3]
 
 let res = dec
   .reduce((acc, cur) => {
