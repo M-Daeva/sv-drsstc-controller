@@ -4,7 +4,7 @@ module entry (
 				 input wire clk,
 
 				 input wire uart_data,
-				 output `wire_2d(sh_reg, CONF_PAR_MAX, CONF_PAR_4),
+
 
 				 //output wire gen_out,
 
@@ -20,7 +20,8 @@ module entry (
 				 output wire int_out_n
 			 );
 
-// `wire(CONF_PAR_MAX) uart_ref_gen, uart_pred, uart_int_freq, uart_int_pw, uart_ocd_lvl;
+`wire(CONF_PAR_MAX) data_bus;
+`wire(CONF_PAR_4) addr_bus;
 
 // assign uart_ref_gen = sh_reg[4],
 // 			 uart_pred = sh_reg[3],
@@ -36,22 +37,35 @@ uart #(
 		 ) uart_ins(
 			 .clk(clk),
 			 .uart_data(uart_data),
-			 .sh_reg(sh_reg)
+			 //.sh_reg(sh_reg)
+
+			 .storage(data_bus),
+			 .conf_par_cnt(addr_bus),
+			 .is_data_ready(en)
 		 );
 
 ref_gen #(.CLK_MHZ(GEN_CLK_FREQ_MHZ),
 					.FREQ_MID_KHZ(200),
-					.GEN_PARAMETER(255))
+					.GEN_PARAMETER(255),
+					.VALUE(8'd127),	// 8d'127 - 200 kHz
+					.ADDR_MAX(ADDR_MAX),
+					.ADDR(REF_GEN_ADDR))
 				rg1(
 					.clk(clk),
-					.inp(sh_reg[4]),	// 8d'127 - 200 kHz
+					.data(data_bus),	// 8d'127 - 200 kHz
+					.addr(addr_bus),
+					.en(en),
 					.out(gen_out)
 				);
 
-pred p1(
+pred #(.ADDR_MAX(ADDR_MAX),
+			 .ADDR(PRED_ADDR))
+		 p1(
 			 .clk(clk),
 			 .sgn(fb_in),
-			 .shift(sh_reg[3]),	//8'd30
+			 .shift(data_bus),	//8'd30
+			 .addr(addr_bus),
+			 .en(en),
 			 .sgn_pre(fb_out)
 		 );
 
@@ -67,24 +81,33 @@ selector #(.CLK_MHZ(GEN_CLK_FREQ_MHZ),
 
 interrupter #(.CLK_MHZ(GEN_CLK_FREQ_MHZ),
 							.FREQ_MIN_HZ(INTER_FREQ_MIN_HZ),
-							.PW_STEP_MUL(5),
+							.PW_STEP_MUL(500),	// 1 step - 5 us
 							.SKIP_CNT_MAX(3),	// rewrite lookup -> harmonical step
-							.PAR_MAX_VAL(255))
+							.PAR_MAX_VAL(255),
+							.ADDR_MAX(ADDR_MAX),
+							.ADDR(FREQ_ADDR),
+							.ADDR2(PW_ADDR))
 						i1(
 							.clk(clk),
 							.gen(sel_out),
 							.ocd(int_ocd),
-							.freq_par(sh_reg[1]),	// frequency multiplier
-							.pw_par(sh_reg[0]),		// pulse width multiplier
+							.data(data_bus),	// frequency multiplier 8'd10
+							//	.pw_par(8'd1),		// pulse width multiplier 8'd1
+							.addr(addr_bus),
+							.en(en),
 							.out_p(int_out_p),
 							.out_n(int_out_n)
 						);
 
 ocd_lvl #(.CLK_MHZ(GEN_CLK_FREQ_MHZ),
-					.PAR_MAX_VAL(200))
+					.PAR_MAX_VAL(200),
+					.ADDR_MAX(ADDR_MAX),
+					.ADDR(OCD_ADDR))
 				o(
 					.clk(clk),
-					.pw_par(sh_reg[2]),
+					.pw_par(data_bus),	// 8'd87
+					.addr(addr_bus),
+					.en(en),
 					.out(ocd_lvl_out)
 				);
 

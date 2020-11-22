@@ -12,7 +12,7 @@ assume 960 kHz for faster simulation
 
 localparam 	GEN_CLK_FREQ = 100_000_000,
 						TB_CLK_FREQ = 1_000_000_000,
-						UART_FREQ = 9_600_000,
+						UART_FREQ = 115_200,
 
 						FRAME_FREQ = 2 * UART_FREQ,
 						FRAME = `div(GEN_CLK_FREQ, FRAME_FREQ),
@@ -25,4 +25,11 @@ localparam 	GEN_CLK_FREQ = 100_000_000,
 						DATA_BIT_CNT_MAX = 7,
 
 						GEN_CLK_FREQ_MHZ = 100,
-						INTER_FREQ_MIN_HZ = 1_000;
+						INTER_FREQ_MIN_HZ = 1_000,
+
+						ADDR_MAX = 4,
+						REF_GEN_ADDR = 4,
+						PRED_ADDR = 3,
+						OCD_ADDR = 2,
+						FREQ_ADDR = 1,
+						PW_ADDR = 0;

@@ -13,19 +13,18 @@ module int_gen #(parameter
 				 output wire out
 			 );
 
-localparam FREQ_RATIO = `div(1_000_000 * CLK_MHZ, FREQ_MIN_HZ);
+localparam K1 = 19,
+					 K2 = 14,
+					 K3 = 9,
+					 CNT_MAX = (1 << K1) + (PAR_MAX_VAL << K2);
 
-`reg(FREQ_RATIO) cnt = 0;
+`reg(CNT_MAX) cnt = 0;
 
 always @(posedge clk) begin
 	if (cnt) cnt <= cnt - 1;
-	else begin
-		case(freq_par)
-			`lookup
-		endcase
-	end
+	else cnt <= (1 << K1) + (freq_par << K2);
 end
 
-assign out = cnt < PW_STEP_MUL * pw_par;
+assign out = cnt < (pw_par << K3);
 
 endmodule

@@ -45,14 +45,14 @@ entry entry_inst(
 				.int_out_n(int_out_n_tb)
 			);
 
-localparam test_data = 49'b0_11111110_10_00111100_10_11101010_10_01010000_10_10000000,
+localparam test_data = 49'b0_11111110_10_00111100_10_11101010_10_00000000_10_01000000,
 					 packet_size = $bits(test_data);
 
 // clk
 always #CLK_FRAME_TB clk_tb = ~clk_tb;
 always #FRAME_TB uart_clk_tb = ~uart_clk_tb;
 
-localparam mul = 20;
+localparam mul = 3;
 initial #(mul * 2 * (packet_size + 2) * FRAME_TB) $finish;
 
 initial begin
