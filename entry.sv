@@ -105,7 +105,7 @@ interrupter #(.CLK_MHZ(GEN_CLK_FREQ_MHZ),
 						);
 
 ocd_lvl #(.CLK_MHZ(GEN_CLK_FREQ_MHZ),
-					.PAR_MAX_VAL(200),	// 500 kHz
+					.PAR_MAX_VAL(250),	// 200 A max
 					.ADDR_MAX(ADDR_MAX),
 					.ADDR(OCD_ADDR))
 				o(
