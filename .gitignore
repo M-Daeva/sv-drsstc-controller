@@ -1,4 +1,6 @@
+/.idea
 /db
 /incremental_db
 /output_files
 *.orig
+out.vcd
